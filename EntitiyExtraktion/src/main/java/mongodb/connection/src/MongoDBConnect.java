@@ -19,7 +19,7 @@ public class MongoDBConnect {
 
 		MongoDBConnect mongodbconn = new MongoDBConnect();
 		try {
-			mongodbconn.getRawData(mongodbconn.getConnection("138.201.125.161", 27017, "crawlDB"));
+			mongodbconn.getRawData(mongodbconn.getConnection("localhost", 27017, "crawlDB"));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
