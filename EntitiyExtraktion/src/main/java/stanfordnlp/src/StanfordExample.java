@@ -46,7 +46,7 @@ public class StanfordExample {
 
 	    for (String str : example) {
       		System.out.println(classifier.classifyToString(str, "tsv", false));
-      }
+	    }
 	    
 //	    List<List<CoreLabel>> out = classifier.classify(fileContents);
 //        for (List<CoreLabel> sentence : out) {
