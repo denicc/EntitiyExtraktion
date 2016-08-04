@@ -1,5 +1,6 @@
 package elastic.dataflow.src;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -15,6 +16,8 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+
+import stanfordnlp.src.StanfordExample;
 
 public class ElasticConnect {
 
@@ -111,7 +114,7 @@ public class ElasticConnect {
 			    
 		}
 		
-		 content.forEach( (k,v) -> System.out.println("Key: " + k + ": Value: " + v));
+		// content.forEach( (k,v) -> System.out.println("Key: " + k + ": Value: " + v));
 		
 		System.out.println("Total Hits: " + z);
 		JobEndTime = System.currentTimeMillis();
@@ -121,6 +124,19 @@ public class ElasticConnect {
 
 		client.close();
 
+		//Stanford Connection
+		StanfordExample example = new StanfordExample();
+		
+		example.getTokenRegex(content.get("www.axelspringer.de"));
+
+		
+		
+//		try {
+//			example.getNE(content.get("www.axelspringer.de"));
+//		} catch (ClassCastException | ClassNotFoundException | IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		
 	}
