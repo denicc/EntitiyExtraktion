@@ -12,7 +12,7 @@ public class Example {
 		System.setProperty("treetagger.home", "/apps/TreeTagger");
 		TreeTaggerWrapper<String> tt = new TreeTaggerWrapper<String>();
 		try {
-			tt.setModel("models/german-utf8.par");
+			tt.setModel("classifier/treetagger/german-utf8.par");
 			
 			tt.process(new String[] { "Das", "ist", "ein", "Test", "." });
 		}

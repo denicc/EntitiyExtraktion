@@ -22,7 +22,7 @@ public class Example {
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 	
 		
-		InputStream modelIn = new FileInputStream("models/de-token.bin");
+		InputStream modelIn = new FileInputStream("classifier/opennlp/de-token.bin");
 
 		try {
 			TokenizerModel model = new TokenizerModel(modelIn);
