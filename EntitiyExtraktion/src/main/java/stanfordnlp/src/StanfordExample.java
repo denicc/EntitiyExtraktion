@@ -67,16 +67,41 @@ public class StanfordExample {
 		CoreMapExpressionExtractor<MatchedExpression> extractor = CoreMapExpressionExtractor
 		            .createExtractorFromFiles(TokenSequencePattern.getNewEnv(), rules);
 		 
-	        String sampleGermanText = "...";
+		 
+	        String sampleGermanText = "LMC ist in Sassenberg";
 	        Annotation germanAnnotation = new Annotation(sampleGermanText);
 	        Properties germanProperties = StringUtils.argsToProperties(
-	                new String[]{"-props", "StanfordCoreNLP-german.properties"});
+	                new String[]{"-props", "properties/myProperties.properties"});
 	        StanfordCoreNLP pipeline = new StanfordCoreNLP(germanProperties);
+	       
+	  
 	        pipeline.annotate(germanAnnotation);
-	        for (CoreMap sentence : germanAnnotation.get(CoreAnnotations.SentencesAnnotation.class)) {
-	            Tree sentenceTree = sentence.get(TreeCoreAnnotations.TreeAnnotation.class);
-	            System.out.println(sentenceTree);
+	       
+	        List<CoreMap> sentences = germanAnnotation.get(CoreAnnotations.SentencesAnnotation.class);
+
+	        for (CoreMap sentence : sentences) {
+	     
+	         System.out.println(extractor.getValue("SCHLAU"));
+	         System.out.println(sentence);
+	         System.out.println(extractor.extractExpressions(sentence));
+	          List<MatchedExpression> matchedExpressions = extractor.extractExpressions(sentence);
+	          System.out.println(matchedExpressions.size());
+	          for (MatchedExpression matched:matchedExpressions) {
+	            // Print out matched text and value
+	            System.out.println("Matched expression: " + matched.getText() + " with value " + matched.getValue());
+	            // Print out token information
+	            CoreMap cm = matched.getAnnotation();
+	            for (CoreLabel token : cm.get(CoreAnnotations.TokensAnnotation.class)) {
+	              String word = token.get(CoreAnnotations.TextAnnotation.class);
+	              String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
+	              String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+	              String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
+	              System.out.println("  Matched token: " + "word="+word + ", lemma="+lemma + ", pos=" + pos + ", ne=" + ne);
+	            }
+	          }
 	        }
+	        
+	        
 	    }
 		 
 	}
