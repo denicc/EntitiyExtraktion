@@ -1,0 +1,69 @@
+# Map variable names to annotation keys
+ner = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$NamedEntityTagAnnotation" }
+tokens = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation" }
+text = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$TextAnnotation" }
+#value = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$ValueAnnotation" }
+
+#VARIABLES
+$DAYOFWEEK = "/Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag/"
+$TIMEOFDAY = "/morning|afternoon|evening|night|noon|midnight/"
+
+
+# Case insensitive pattern matching (see https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html flags)
+ENV.defaultStringPatternFlags = 2
+
+# Define ruleType to be over tokens
+ENV.defaults["ruleType"] = "tokens"
+
+
+# NER tagging of subreddits + normalisation to lowercase
+# TODO: implement join with preceding slash, also for non-reddit paths
+{
+	pattern: ( /r\/[\w]+/) ,
+	action: (
+		Annotate($0, ner, "SUBREDDIT"),
+		Annotate($0, text, Lowercase($$0.text))
+	)
+}
+
+# NER tagging of isms + normalisation to lowercase
+# takes care of not tagging words ending in -ism that are not isms (i.e. schism and prism)
+{
+	pattern: ( /(?!(sch|Sch|pr|Pr))[\w-]+ism/ ),
+	action: (
+    		Annotate($0, ner, "ISM"),
+    		Annotate($0, text, Lowercase($$0.text))
+    	)
+}
+
+
+# NER tagging of ists + normalisation to lowercase
+# TODO: figure out if I can use the lemma for plural stuff
+# TODO: don't change the text too much (e.g. lowercasing), maybe it can be saved to a different annotation?
+{
+	pattern: ( /[A-Z][\w-]+ists?/ ),
+	action: (
+    		Annotate($0, ner, "IST"),
+    		Annotate($0, text, Lowercase($$0.text))
+    	)
+}
+
+
+  
+  // Match expressions like "monday afternoon"
+  {
+    pattern: ( $DAYOFWEEK ), 
+    action: (
+    	Annotate($0, ner, "WOCHENTAG")
+    )
+   
+  }
+
+  {
+    pattern: ( ( [ { ner:WOCHENTAG } ]) /ist/ ), 
+    action: (
+    	Annotate($0, ner, "WOCHENTAGIST")
+    )
+   
+  }
+
