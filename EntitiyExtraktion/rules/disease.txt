@@ -13,8 +13,11 @@ $Disease = (
 
 $Website = (
  /www.schommer-media.de/
+)
 
-) 
+$Locations = (
+ /Nürnberg/
+)
 
 
 ENV.defaults["ruleType"] = "tokens"
@@ -35,6 +38,10 @@ ENV.defaultNestedResultsAnnotationKey= mytokens
 }
 	pattern: ( $Website ),
 	result: "WEBSITE"
+}
+}
+	pattern: ($Locations),
+	result: "ORT"
 }
 
 

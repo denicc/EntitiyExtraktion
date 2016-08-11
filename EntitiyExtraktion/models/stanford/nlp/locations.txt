@@ -1,2 +1,3 @@
-dsdf	BUCHSTABE
-Nürnberg	LOCATION
+Nürnberg	ORT
+Wolfratshausen	ORT	PERSON
+49	VORWAHL
