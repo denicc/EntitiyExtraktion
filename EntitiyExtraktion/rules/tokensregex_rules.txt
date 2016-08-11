@@ -8,6 +8,13 @@ text = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$TextAnnota
 $DAYOFWEEK = "/Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag/"
 $TIMEOFDAY = "/morning|afternoon|evening|night|noon|midnight/"
 
+$Disease = (
+  /cancer/|
+  /allergy/| 
+  /acne/|
+  /breast/ /cancer/
+)
+
 
 # Case insensitive pattern matching (see https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html flags)
 ENV.defaultStringPatternFlags = 2
@@ -58,12 +65,12 @@ ENV.defaults["ruleType"] = "tokens"
     )
    
   }
+  
+  
 
-  {
-    pattern: ( ( [ { ner:WOCHENTAG } ]) /ist/ ), 
-    action: (
-    	Annotate($0, ner, "WOCHENTAGIST")
-    )
-   
-  }
 
+ENV.defaults["ruleType"] = "composite"
+{
+  pattern: ( ( [ { ner:WOCHENTAG } ]) /ist/ ),
+  result: Format("hasDisease(%s,%s)",$1[0].word, $2[0].word)
+}

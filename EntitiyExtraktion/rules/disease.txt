@@ -1,0 +1,47 @@
+ENV.defaultStringPatternFlags = 2
+
+ner = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$NamedEntityTagAnnotation" }
+tokens = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation" }
+mytokens = { type: "CLASS", value: "stanfordnlp.src.MyAnnotations$MyTokensAnnotation" }
+
+$Disease = (
+  /cancer/|
+  /Allergie/| 
+  /acne/|
+  /breast/ /cancer/
+)
+
+$Website = (
+ /www.schommer-media.de/
+
+) 
+
+
+ENV.defaults["ruleType"] = "tokens"
+
+ENV.defaults["stage"] = 1
+ENV.defaultResultAnnotationKey = ner
+ENV.defaultNestedResultsAnnotationKey= mytokens 
+{
+  pattern: ( $Disease ), 
+  result: "DISEASE" 
+}
+
+ENV.defaults["ruleType"] = "tokens"
+
+ENV.defaults["stage"] = 1
+ENV.defaultResultAnnotationKey = ner
+ENV.defaultNestedResultsAnnotationKey= mytokens 
+}
+	pattern: ( $Website ),
+	result: "WEBSITE"
+}
+
+
+ENV.defaults["ruleType"] = "composite"
+{
+  pattern: ( ( [ { ner:PERSON } ]) /hatte/ ([ { ner:DISEASE } ] ) ),
+  result: Format("hasDisease(%s,%s)",$1[0].word, $2[0].word)
+  
+}
+

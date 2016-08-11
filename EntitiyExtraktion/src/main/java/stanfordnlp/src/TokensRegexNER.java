@@ -14,7 +14,8 @@ public class TokensRegexNER {
 	
 	public static void main(String[] args) {
         try {
-            String example =   "There is Panelist prism with a schism and Apple Inc., based in Cupertino that contains blue socialism on /r/vidEos, but is void of red Existentialism and Absentee-ism. dsdf ist. Mittwoch ist ein neuer Tag.";
+            String example =   "There is Panelist prism with a schism and Apple Inc., based in Cupertino that contains blue socialism on allergy" + 
+            		"/r/vidEos, but is void of red Existentialism and Absentee-ism. dsdf ist. Mittwoch ist ein neuer Tag. In Essen. Peter has cancer.";
             System.out.println("pipelined approach");
 
             // initiate pipeline with properties (i.e. what stages)
@@ -22,9 +23,9 @@ public class TokensRegexNER {
             props.setProperty("annotators", "tokenize, ssplit, pos, lemma, gender, ner, tokensregex, regexner");
 //        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, gender, ner, regexner, parse, sentiment, sentimenttargets");
             props.setProperty("customAnnotatorClass.sentimenttargets", "sentiment.SentimentTargetsAnnotator");
-//            props.setProperty("customAnnotatorClass.tokensregexner", "edu.stanford.nlp.pipeline.TokensRegexNERAnnotator");
+            props.setProperty("customAnnotatorClass.tokensregexner", "edu.stanford.nlp.pipeline.TokensRegexNERAnnotator");
             props.setProperty("customAnnotatorClass.tokensregex", "edu.stanford.nlp.pipeline.TokensRegexAnnotator");
-            props.setProperty("tokensregex.rules", "rules/tokensregex_rules.txt");
+            props.setProperty("tokensregex.rules", "rules/disease.txt");
             props.setProperty("regexner.mapping", "models/stanford/nlp/locations.txt");
             props.put("tokensregex.verbose", "true");
 //            props.put("tokensregexner.verbose", "true");
@@ -55,8 +56,8 @@ public class TokensRegexNER {
                 List<CoreLabel> tokens = tokenMap.get(CoreAnnotations.TokensAnnotation.class);
                 for (CoreLabel token : tokens) {
                     System.out.println("annotations for " + token);
-//                    System.out.println("1"+token.get(CoreAnnotations.CharacterOffsetBeginAnnotation.class)); // char pos in text
-//                    System.out.println("2"+token.get(CoreAnnotations.CharacterOffsetEndAnnotation.class));  // char pos in text
+                    System.out.println("1"+token.get(CoreAnnotations.CharacterOffsetBeginAnnotation.class)); // char pos in text
+                    System.out.println("2"+token.get(CoreAnnotations.CharacterOffsetEndAnnotation.class));  // char pos in text
 //                    System.out.println(token.get(CoreAnnotations.AnswerAnnotation.class));
 //                    System.out.println(token.get(CoreAnnotations.EntityTypeAnnotation.class));
 //                    System.out.println(token.get(CoreAnnotations.EntityClassAnnotation.class));

@@ -1,1 +1,2 @@
 dsdf	BUCHSTABE
+Nürnberg	LOCATION
