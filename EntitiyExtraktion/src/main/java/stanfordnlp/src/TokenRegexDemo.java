@@ -105,7 +105,7 @@ public class TokenRegexDemo {
 
 	    for (CoreMap sentence : sentences) {
 	    	
-	    	
+	    	System.out.println("SENTENCE< " + sentence);
 	    	 for (CoreLabel token : sentence.get(TokensAnnotation.class)) {
 	              currNeToken = token.get(NamedEntityTagAnnotation.class);
 
