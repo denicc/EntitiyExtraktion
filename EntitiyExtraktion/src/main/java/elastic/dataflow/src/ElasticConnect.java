@@ -70,7 +70,7 @@ public class ElasticConnect {
 			    // do something with the id value
 			}
 
-			//hostList.forEach(System.out::println);
+			hostList.forEach(System.out::println);
 			
 	
 			getDataPerHost(client, hostList);
@@ -114,7 +114,7 @@ public class ElasticConnect {
 			    
 		}
 		
-		// content.forEach( (k,v) -> System.out.println("Key: " + k + ": Value: " + v));
+		 content.forEach( (k,v) -> System.out.println(v));
 		
 		System.out.println("Total Hits: " + z);
 		JobEndTime = System.currentTimeMillis();

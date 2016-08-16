@@ -5,10 +5,9 @@ tokens = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$TokensAn
 mytokens = { type: "CLASS", value: "stanfordnlp.src.MyAnnotations$MyTokensAnnotation" }
 
 $Disease = (
-  /cancer/|
-  /Allergie/| 
-  /acne/|
-  /breast/ /cancer/
+  /Fax/|
+  /Allergie/|
+  /Stuttgart/
 )
 
 $Website = (
@@ -16,9 +15,8 @@ $Website = (
 )
 
 $Locations = (
- /Nürnberg/
+ /TEMPO/
 )
-
 
 ENV.defaults["ruleType"] = "tokens"
 
@@ -26,29 +24,20 @@ ENV.defaults["stage"] = 1
 ENV.defaultResultAnnotationKey = ner
 ENV.defaultNestedResultsAnnotationKey= mytokens 
 {
-  pattern: ( $Disease ), 
-  result: "DISEASE" 
-}
-
-ENV.defaults["ruleType"] = "tokens"
-
-ENV.defaults["stage"] = 1
-ENV.defaultResultAnnotationKey = ner
-ENV.defaultNestedResultsAnnotationKey= mytokens 
-}
-	pattern: ( $Website ),
-	result: "WEBSITE"
+  pattern: ( $Website ), 
+  result: "WEBISTE",
+  stage: 1
 }
 }
-	pattern: ($Locations),
-	result: "ORT"
+	pattern: ( $Locations ),
+	result: "TEMPO",
+	stage: 2
 }
 
 
 ENV.defaults["ruleType"] = "composite"
 {
-  pattern: ( ( [ { ner:PERSON } ]) /hatte/ ([ { ner:DISEASE } ] ) ),
-  result: Format("hasDisease(%s,%s)",$1[0].word, $2[0].word)
+  pattern: ( ( [ { ner:ORT } ]) /ist/ ( [ { ner:ORT } ]) ),
+  result: Format("OrtIstOrt(%s,%s)",$1[0].word, $2[0].word)
   
 }
-

@@ -1,0 +1,17 @@
+ner = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$NamedEntityTagAnnotation" }
+tokens = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation" }
+mytokens = { type: "CLASS", value: "stanfordnlp.src.MyAnnotations$MyTokensAnnotation" }
+
+$USTID = (
+  /Ich/
+)
+
+{
+     ruleType: "text",
+     pattern: ( $USTID ),
+     action: (Annotate($1, ner, "ICH")),
+     priority: 0,
+     stage: 1,
+     matchWithResults: TRUE,
+     result: ICH
+}

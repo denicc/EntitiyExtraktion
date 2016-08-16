@@ -1,3 +1,6 @@
 Nürnberg	ORT
 Wolfratshausen	ORT	PERSON
-49	VORWAHL
+Stuttgart	ORT
+Ansbach	ORT
+Berlin	ORT
+Make Believe Town	ORT
