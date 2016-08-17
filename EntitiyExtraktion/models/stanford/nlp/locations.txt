@@ -1,6 +1,8 @@
-Nürnberg	ORT
-Wolfratshausen	ORT	PERSON
-Stuttgart	ORT
-Ansbach	ORT
-Berlin	ORT
-Make Believe Town	ORT
+Nürnberg	"LOCATION"
+Wolfratshausen	"LOCATION"
+Stuttgart	"LOCATION"
+Ansbach	"LOCATION"
+Berlin	"LOCATION"
+Make Believe Town	"LOCATION"
+Johannes	"I-PER"
+"LMC-Caravan"	"I-ORG"

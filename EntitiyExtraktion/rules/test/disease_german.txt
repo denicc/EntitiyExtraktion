@@ -1,0 +1,43 @@
+ENV.defaultStringPatternFlags = 2
+
+ner = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$NamedEntityTagAnnotation" }
+tokens = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation" }
+mytokens = { type: "CLASS", value: "stanfordnlp.src.MyAnnotations$MyTokensAnnotation" }
+
+$Disease = (
+  /Fax/|
+  /Allergie/|
+  /Stuttgart/ 
+)
+
+$Website = (
+ /www.schommer-media.de/
+)
+
+$Locations = (
+ /Inhalte/
+)
+
+
+ENV.defaultResultAnnotationKey = ner
+ENV.defaultNestedResultsAnnotationKey= mytokens 
+{
+  ruleType: "tokens",
+  pattern: ( $Website ), 
+  result: "WEBISTE",
+  stage: 1
+}
+}
+  ruleType: "tokens",
+  pattern: ( $Locations ),
+  result: "TEMPO", 
+  stage: 2
+}
+
+
+{
+  ruleType: "composite",
+  pattern: ( ( [ { ner:ORT } ]) /ist/ ( [ { ner:ORT } ]) ),
+  result: Format("OrtIstOrt(%s,%s)",$1[0].word, $2[0].word)
+  
+}

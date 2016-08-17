@@ -40,7 +40,7 @@ public class TokenRegexDemo {
 	    String rules;
 	    
 
-	    String text = " cancer TEMPO Fischer Stuttgart ist Allergie GmbH Wolfratshausen Messepiazza 1 70629 Stuttgart und Nürnberg Tel.: +49 711 18560-0 Fax: +49 711 18560-2440  info(at)messe-stuttgart.de    Online-Redaktion: Jens Kohring   jens.kohring(at)messe-stuttgart.de Informationen Aufsichtsratsvorsitzender:  Staatssekretär Peter Hofelich MdL Geschäftsführer: Ulrich Kromer von Baerle (Sprecher der Geschäftsführung) Roland Bleinroth  Amtsgericht Stuttgart HR B 585 USt-IdNr.: DE 147 866426 Inhaltshinweis: Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.  Datenschutzerklärung   Konzeption & Realisierung Internetauftritt   TYPO3 Internetagentur Stuttgart Schommer Media GmbH Königstraße 56 70173 Stuttgart www.schommer-media.de";
+	    String text = " cancer TEMPO Fischer Stuttgart ist Stuttgart GmbH Wolfratshausen Messepiazza 1 70629 Stuttgart und Nürnberg Tel.: +49 711 18560-0 Fax: +49 711 18560-2440  info(at)messe-stuttgart.de    Online-Redaktion: Jens Kohring   jens.kohring(at)messe-stuttgart.de Informationen Aufsichtsratsvorsitzender:  Staatssekretär Peter Hofelich MdL Geschäftsführer: Ulrich Kromer von Baerle (Sprecher der Geschäftsführung) Roland Bleinroth  Amtsgericht Stuttgart HR B 585 USt-IdNr.: DE 147 866426 Inhaltshinweis: Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.  Datenschutzerklärung   Konzeption & Realisierung Internetauftritt   TYPO3 Internetagentur Stuttgart Schommer Media GmbH Königstraße 56 70173 Stuttgart www.schommer-media.de";
 	    
 	    emailValidation(text);
 	    
@@ -50,7 +50,7 @@ public class TokenRegexDemo {
 	    if (args.length > 0) {
 	      rules = args[0];
 	    } else {
-	      rules = "rules/disease.txt";
+	      rules = "rules/test/disease_german.txt";
 	    }
 	    PrintWriter out;
 	    if (args.length > 2) {
@@ -121,8 +121,6 @@ public class TokenRegexDemo {
 				}
 	              // Strip out "O"s completely, makes code below easier to understand
 	    	 }
-	    	
-	    	
 	    	
 	      List<MatchedExpression> matchedExpressions = extractor.extractExpressions(sentence);
 	      	      
