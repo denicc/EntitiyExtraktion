@@ -46,11 +46,23 @@ ENV.defaults["ruleType"] = "composite"
   result: Format("livesIn(%s,%s)",$1[0].word, $2[0].word),
   stage: 2
 }
-
+# TestRule
 {
   pattern: ( ( [ { ner:"I-PER" } ]) /favourite/ /color/ /is/ ([ { ner:COLOR } ] ) ),
   result: Format("favouriteColor(%s,%s)",$1[0].word, $2[0].word),
   stage: 2
+}
+# Define ruleType to be over tokens
+{
+  pattern: ( ( [ { ner:"I-ORG" } ]) ( [ { ner:"I-ORG" } ]) /GmbH/ ),
+  result: Format("ISTORGANISATION(%s,%s)",$1[0].word, $2[0].word),
+  stage: 2
+}
+
+{
+  pattern: ( ( [ { ner:"FÜHRUNG" } ]) /:/ ( [ { ner:"I-PER" } ]) ( [ { ner:"I-PER" } ]) ),
+  result: Format("ISTFÜHRUNG(%s,%s,%s)",$1[0].word, $2[0].word, $3[0].word),
+  stage: 1
 }
 
 

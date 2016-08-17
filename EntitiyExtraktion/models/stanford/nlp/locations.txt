@@ -6,3 +6,6 @@ Berlin	"LOCATION"
 Make Believe Town	"LOCATION"
 Johannes	"I-PER"
 "LMC-Caravan"	"I-ORG"
+GmbH	RECHTSFORM
+Geschäftsführer	FÜHRUNG
+Vorstand	FÜHRUNG

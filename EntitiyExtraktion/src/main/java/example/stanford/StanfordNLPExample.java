@@ -21,11 +21,13 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class StanfordNLPExample {
 
-	Set<String> patterns;
+	Set<String> ustId;
+	Set<String> emailList;
+	
 	String[] ustIdPattern = {"(DE) [0-9]{9}","(DE)[0-9]{9}"};
 	String[] telefonPattern = {""};
 	String[] plzPattern = {""};
-	String[] emailPattern = {""};
+	String[] emailPattern = {"^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9](?:[A-Z0-9-]{0,62}[A-Z0-9])?.){1,8}[A-Z]{2,63}$"};
 	
 	
 	public static void main(String[] args) {
@@ -39,25 +41,35 @@ public class StanfordNLPExample {
 		
 	}
 
-	private Set<String> preprocessing(String impressum) {
+	private void preprocessing(String impressum) {
 		
-		
+		ustId = new HashSet<String>();
+		emailList = new HashSet<String>();
+
 		
 		System.out.println("UstId Pattern EXTRACTING");
 		for (int i = 0; i < ustIdPattern.length; i++) {
-			System.out.println(ustIdPattern[i]);
 			Pattern pattern = Pattern.compile(ustIdPattern[i]);
 			Matcher matcher = pattern.matcher(impressum);
 				while (matcher.find()) {
-					  System.out.println(impressum.substring(
+					  ustId.add(impressum.substring(
 					    matcher.start(), matcher.end()));
 			}
-			
 		}
+		for (int i = 0; i < emailPattern.length; i++) {
+			Pattern pattern = Pattern.compile(emailPattern[i]);
+			Matcher matcher = pattern.matcher(impressum);
+				while (matcher.find()) {
+					  emailList.add(impressum.substring(
+					    matcher.start(), matcher.end()));
+			}
+		}
+		ustId.forEach(System.out::println);
+		emailList.forEach(System.out::println);
+
+		
 		// Finde all Wörter mit mindestens zwei 
 		// Großbuchstaben (Unicode)
-		
-		return patterns;
 
 		
 	}
@@ -92,7 +104,6 @@ public class StanfordNLPExample {
 		    // But you can see what is in it with other methods like toShorterString()
 		    System.out.println("Pattern Precessing");
 		    
-		    patterns = preprocessing(impressum);
 		    
 		    System.out.println("The top level annotation");
 		    System.out.println(annotation.toShorterString());
@@ -115,12 +126,17 @@ public class StanfordNLPExample {
 				        String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
 				        String normalized = token.get(CoreAnnotations.NormalizedNamedEntityTagAnnotation.class);
 				        
-					    System.out.println("token: " + "word="+word + ", pos=" + pos + ", ne=" + ne + ", normalized=" + normalized);
+					   // System.out.println("token: " + "word="+word + ", pos=" + pos + ", ne=" + ne + ", normalized=" + normalized);
 		    	
 		    	  }
 		      for (MatchedExpression matched:matchedExpressions) {
 		        // Print out matched text and value
-		        System.out.println("Matched expression: " + matched.getText() + " with value " + matched.getValue());
+		    	  if (matched.getValue().toString().contains("Geschäftsführer")) {
+
+		    		  System.out.println("GESCHÄFTSFÜHRER");
+				        System.out.println("Matched expression: " + matched.getText() + " with value " + matched.getValue());
+
+				}
 		        // Print out token information
 		        CoreMap cm = matched.getAnnotation();
 		        for (CoreLabel token : cm.get(CoreAnnotations.TokensAnnotation.class)) {
@@ -128,7 +144,7 @@ public class StanfordNLPExample {
 		          String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
 		          String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
 		          String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
-		          System.out.println("  Matched token: " + "word="+word + ", lemma="+lemma + ", pos=" + pos + ", ne=" + ne);
+		          //System.out.println("  Matched token: " + "word="+word + ", lemma="+lemma + ", pos=" + pos + ", ne=" + ne);
 		        }
 		      }
 		    }
