@@ -39,9 +39,9 @@ public class Example {
 		
 		Example ex = new Example();
 		
-		ex.extractMail(input);
+		//ex.extractMail(input);
 		
-		ex.extractStrasse(input);
+		//ex.extractStrasse(input);
 		ex.getSentences(bw, input);
 		
 		//ex.getTokens(bw, input);
@@ -87,7 +87,8 @@ public class Example {
 	
 	private void getSentences(BufferedWriter bw, String input) throws FileNotFoundException {
 		InputStream modelIn = new FileInputStream("classifier/opennlp/de-sent.bin");
-
+		
+		
 		SentenceModel model;
 		try {
 			model = new SentenceModel(modelIn);
@@ -98,6 +99,7 @@ public class Example {
 			for (int i = 0; i < sentences.length; i++) {
 				
 				bw.write(sentences[i]);
+				System.out.println(sentences[i]);
 				bw.newLine();
 			}
 			

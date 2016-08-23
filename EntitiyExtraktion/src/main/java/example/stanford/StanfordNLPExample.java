@@ -37,7 +37,7 @@ public class StanfordNLPExample {
 		
 		StanfordNLPExample ex = new StanfordNLPExample();
 		ex.preprocessing(impressum);
-		//ex.getAnnotations(impressum);
+		ex.getAnnotations(impressum);
 		
 	}
 
@@ -88,11 +88,16 @@ public class StanfordNLPExample {
 		    StanfordCoreNLP pipeline;
 		    
 		    Properties props = new Properties();
-
+		    props.setProperty("ssplit.eolonly", "true");
+		   // props.setProperty("ssplit.boundaryMultiTokenRegex", "/\'\'/");
 		    props.setProperty("annotators","tokenize,ssplit,pos,lemma,ner,regexner");
 		    props.setProperty("regexner.mapping", "models/stanford/nlp/locations.txt");
 		    props.setProperty("ner.model", "models/stanford/nlp/propertymodels/ner/german.dewac_175m_600.crf.ser.gz");
-
+		    props.setProperty("parse.model", "models/stanford/nlp/propertymodels/lexparser/germanPCFG.ser.gz");
+		    props.setProperty("ner.useSUTime", "true");
+		    
+		    //props.setProperty("pos.model","models/stanford/nlp/propertymodels/pos-tagger/german/german-hgc.tagger");
+		    props.setProperty("tokenize.language", "de");
 		    Annotation annotation;
 		    annotation = new Annotation(impressum);
 		   
@@ -116,6 +121,8 @@ public class StanfordNLPExample {
 		    
 		    for (CoreMap sentence : sentences) {
 		    
+		    	System.out.println(sentence);
+		    	
 			      List<MatchedExpression> matchedExpressions = extractor.extractExpressions(sentence);
 
 		    	  for (CoreLabel token:sentence.get(CoreAnnotations.TokensAnnotation.class)) {
