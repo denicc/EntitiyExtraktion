@@ -41,3 +41,5 @@ ENV.defaults["ruleType"] = "composite"
   result: Format("OrtIstOrt(%s,%s)",$1[0].word, $2[0].word)
   
 }
+
+
