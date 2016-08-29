@@ -24,10 +24,10 @@ public class StanfordNLPExample {
 	Set<String> ustId;
 	Set<String> emailList;
 	
-	String[] ustIdPattern = {"(DE) [0-9]{9}","(DE)[0-9]{9}"};
+	String[] ustIdPattern = {"(DE) [0-9]{9}\\s","(DE)[0-9]{9}\\s", "(DE) [0-9]{3} [0-9]{3} [0-9]{3}\\s"};
 	String[] telefonPattern = {""};
 	String[] plzPattern = {""};
-	String[] emailPattern = {"^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9](?:[A-Z0-9-]{0,62}[A-Z0-9])?.){1,8}[A-Z]{2,63}$"};
+	String[] emailPattern = {"^[A-Z0-9][A-Z0-9._%+-]{0,63}(at)(?:[A-Z0-9](?:[A-Z0-9-]{0,62}[A-Z0-9])?.){1,8}[A-Z]{2,63}$"};
 	
 	
 	public static void main(String[] args) {
@@ -36,26 +36,32 @@ public class StanfordNLPExample {
 
 		
 		StanfordNLPExample ex = new StanfordNLPExample();
-		ex.preprocessing(impressum);
+		ex.preprocessing(impressum, impressum);
 		ex.getAnnotations(impressum);
 		
 	}
 
-	private void preprocessing(String impressum) {
+	public void preprocessing(String k, String impressum) {
 		
 		ustId = new HashSet<String>();
 		emailList = new HashSet<String>();
+		int counter = 0;
 
 		
-		System.out.println("UstId Pattern EXTRACTING");
+		//System.out.println("UstId Pattern EXTRACTING");
 		for (int i = 0; i < ustIdPattern.length; i++) {
 			Pattern pattern = Pattern.compile(ustIdPattern[i]);
 			Matcher matcher = pattern.matcher(impressum);
 				while (matcher.find()) {
+					counter++;
+					System.out.println(impressum.substring(
+					    matcher.start(), matcher.end()));
 					  ustId.add(impressum.substring(
 					    matcher.start(), matcher.end()));
 			}
 		}
+		//System.out.println("USTD find() " + counter);
+		counter = 0;
 		for (int i = 0; i < emailPattern.length; i++) {
 			Pattern pattern = Pattern.compile(emailPattern[i]);
 			Matcher matcher = pattern.matcher(impressum);
@@ -64,6 +70,12 @@ public class StanfordNLPExample {
 					    matcher.start(), matcher.end()));
 			}
 		}
+		
+		
+		//Check Consistency
+		//Check if Number are the same
+		
+		
 		ustId.forEach(System.out::println);
 		emailList.forEach(System.out::println);
 
@@ -75,7 +87,7 @@ public class StanfordNLPExample {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getAnnotations(String impressum) {
+	public void getAnnotations(String impressum) {
 		
 		
 		String rules1 = "rules/stanford/expres.rules.txt";
@@ -91,9 +103,8 @@ public class StanfordNLPExample {
 		    //props.setProperty("ssplit.eolonly", "true");
 		   // props.setProperty("ssplit.boundaryMultiTokenRegex", "/\'\'/");
 		    props.setProperty("annotators","tokenize,ssplit,pos,lemma,ner,regexner");
-		    props.setProperty("regexner.mapping", "models/stanford/nlp/locations."
-		    		+ "txt");
-		    props.setProperty("ner.model", "classifier/stanford/training-model-04-ner.ser.gz");
+		    props.setProperty("regexner.mapping", "models/stanford/nlp/rechtsformen.txt");
+		    props.setProperty("ner.model", "classifier/stanford/dewac_175m_600.crf.ser.gz");
 		    props.setProperty("parse.model", "models/stanford/nlp/propertymodels/lexparser/germanPCFG.ser.gz");
 		    props.setProperty("ner.useSUTime", "true");
 		    
@@ -109,6 +120,8 @@ public class StanfordNLPExample {
 		    // The toString() method on an Annotation just prints the text of the Annotation
 		    // But you can see what is in it with other methods like toShorterString()
 		    System.out.println("Pattern Precessing");
+		    
+		   
 		    
 		    
 		    System.out.println("The top level annotation");

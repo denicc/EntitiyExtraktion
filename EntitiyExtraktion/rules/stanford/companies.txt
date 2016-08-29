@@ -80,7 +80,7 @@ ENV.defaults["ruleType"] = "composite"
 }
 
 {
-  pattern: ( ( [ { ner:"FÜHRUNG" } ]) /:/ ( [ { ner:"B-PER" } ]) ( [ { ner:"I-PER" } ]) ),
+  pattern: ( ( [ { ner:"FÜHRUNG" } ]) /:/ ( [ { ner:"I-PER" } ]) ( [ { ner:"I-PER" } ]) ),
   result: Format("ISTFÜHRUNG(%s,%s,%s)",$1[0].word, $2[0].word, $3[0].word),
   stage: 1
 }

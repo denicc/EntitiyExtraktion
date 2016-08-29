@@ -17,11 +17,12 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 
+import example.stanford.StanfordNLPExample;
 import stanfordnlp.src.StanfordExample;
 
 public class ElasticConnect {
 
-	private static String ELASTIC_HOST = "138.201.125.161";
+	private static String ELASTIC_HOST = "127.0.0.1";
 	//Muss 9300 sein, da die JAVA-API diesen Port nutzt
 	private static int ELASTIC_PORT = 9300;
 	private String dateFormat = "yyyy-MM-dd'T'HH:mm:ssX";
@@ -44,7 +45,6 @@ public class ElasticConnect {
 		
 		Client client = elastic.getClient(ELASTIC_HOST, ELASTIC_PORT);
 		elastic.getAllHosts(client);
-		//elastic.getElasticData(client);
 		
 	}
 	
@@ -87,7 +87,7 @@ public class ElasticConnect {
 
 			 queries = QueryBuilders.boolQuery()
 					.must(QueryBuilders.matchQuery("host", host))
-					.must(QueryBuilders.matchQuery("title", "Impressum.*"));
+					.must(QueryBuilders.matchQuery("title", ".*Impressum.*Kontakt.*"));
 			
 			
 			
@@ -98,7 +98,7 @@ public class ElasticConnect {
 			
 			      SearchHit[] docs = response.getHits().getHits();
 	      
-			    if (docs.length == 1) {
+			    if (docs.length > 1) {
 					
 					Map<String, Object> map = docs[0].sourceAsMap();
 					
@@ -114,8 +114,9 @@ public class ElasticConnect {
 			    
 		}
 		
-		 content.forEach( (k,v) -> System.out.println(v));
-		
+		 content.forEach( (k,v) -> System.out.println(k + ": " + v));
+		 
+		 
 		System.out.println("Total Hits: " + z);
 		JobEndTime = System.currentTimeMillis();
 		JobTime = JobEndTime - JobStartTime;
@@ -125,9 +126,15 @@ public class ElasticConnect {
 		client.close();
 
 		//Stanford Connection
-		StanfordExample example = new StanfordExample();
+		StanfordNLPExample example = new StanfordNLPExample();
 		
-		example.getTokenRegex(content.get("www.axelspringer.de"));
+		content.forEach((k,v) ->  {
+			System.out.println(k);
+			example.preprocessing(k,v);
+		});
+		
+		//example.preprocessing(content.get("www.brauerei-altenburg.de"));
+		//example.getAnnotations(content.get("www.brauerei-altenburg.de"));
 
 		
 		
