@@ -2,23 +2,30 @@ package elastic.dataflow.src;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.action.termvector.TermVectorResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.apache.lucene.index.Fields;
+import org.apache.lucene.index.Terms;
+import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.util.BytesRef;
 
 import example.stanford.StanfordNLPExample;
-import stanfordnlp.src.StanfordExample;
 
 public class ElasticConnect {
 
@@ -44,7 +51,7 @@ public class ElasticConnect {
 		ElasticConnect elastic = new ElasticConnect();
 		
 		Client client = elastic.getClient(ELASTIC_HOST, ELASTIC_PORT);
-		elastic.getAllHosts(client);
+			elastic.getAllHosts(client);
 		
 	}
 	
@@ -69,11 +76,16 @@ public class ElasticConnect {
 				hostList.add(hit.getSource().get("host").toString());
 			    // do something with the id value
 			}
-
+ 	
+			
+			
 			hostList.forEach(System.out::println);
 			
 	
 			getDataPerHost(client, hostList);
+			
+			
+			
 			
 	}
 
@@ -128,12 +140,14 @@ public class ElasticConnect {
 		//Stanford Connection
 		StanfordNLPExample example = new StanfordNLPExample();
 		
+		//example.getAnnotations("www.flens.de", content.get("www.flens.de"));
+		
 		content.forEach((k,v) ->  {
 			System.out.println(k);
-			example.preprocessing(k,v);
+			example.getAnnotations(k, v);;
 		});
 		
-		//example.preprocessing(content.get("www.brauerei-altenburg.de"));
+		//example.preprocessing("www.flens.de", content.get("www.flens.de"));
 		//example.getAnnotations(content.get("www.brauerei-altenburg.de"));
 
 		
@@ -160,6 +174,7 @@ public class ElasticConnect {
 		
 		
 	}
+	
 
 
 

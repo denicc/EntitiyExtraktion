@@ -23,11 +23,15 @@ public class StanfordNLPExample {
 
 	Set<String> ustId;
 	Set<String> emailList;
+	Set<String> telefonList;
 	
 	String[] ustIdPattern = {"(DE) [0-9]{9}\\s","(DE)[0-9]{9}\\s", "(DE) [0-9]{3} [0-9]{3} [0-9]{3}\\s"};
-	String[] telefonPattern = {""};
+	String[] telefonPattern = {"\\([0-9]{2} [0-9]{2}) [0-9]{2} [0-9]{2}[-][0-9]"};
 	String[] plzPattern = {""};
-	String[] emailPattern = {"^[A-Z0-9][A-Z0-9._%+-]{0,63}(at)(?:[A-Z0-9](?:[A-Z0-9-]{0,62}[A-Z0-9])?.){1,8}[A-Z]{2,63}$"};
+
+	
+	String[] emailPattern = {"^[A-Z0-9][A-Z0-9._%+-]{0,63}(at)(?:[A-Z0-9](?:[A-Z0-9-]{0,62}[A-Z0-9])?.){1,8}[A-Z]{2,63}$",
+			"\\b[\\w.%-]+@[-.\\w]+\\.[A-Za-z]{2,4}\\b","\\b[\\w.%-]+(at)[-.\\w]+\\.[A-Za-z]{2,4}\\b", "\\b[\\w.%-]+@ [-.\\w]+\\.[A-Za-z]{2,4}\\b","\\b[\\w.%-]+(at)[-.\\w]+\\.[A-Za-z]{2,4}\\b" };
 	
 	
 	public static void main(String[] args) {
@@ -37,7 +41,6 @@ public class StanfordNLPExample {
 		
 		StanfordNLPExample ex = new StanfordNLPExample();
 		ex.preprocessing(impressum, impressum);
-		ex.getAnnotations(impressum);
 		
 	}
 
@@ -45,6 +48,7 @@ public class StanfordNLPExample {
 		
 		ustId = new HashSet<String>();
 		emailList = new HashSet<String>();
+		telefonList = new HashSet<String>();
 		int counter = 0;
 
 		
@@ -54,22 +58,30 @@ public class StanfordNLPExample {
 			Matcher matcher = pattern.matcher(impressum);
 				while (matcher.find()) {
 					counter++;
-					System.out.println(impressum.substring(
-					    matcher.start(), matcher.end()));
+					//System.out.println(impressum.substring(
+					//    matcher.start(), matcher.end()));
 					  ustId.add(impressum.substring(
 					    matcher.start(), matcher.end()));
 			}
 		}
 		//System.out.println("USTD find() " + counter);
 		counter = 0;
+		String tempmail;
 		for (int i = 0; i < emailPattern.length; i++) {
 			Pattern pattern = Pattern.compile(emailPattern[i]);
 			Matcher matcher = pattern.matcher(impressum);
 				while (matcher.find()) {
-					  emailList.add(impressum.substring(
-					    matcher.start(), matcher.end()));
+					 tempmail = impressum.substring(
+						    matcher.start(), matcher.end());
+
+					 //remove all whitespaces
+					 tempmail = tempmail.replaceAll("\\s", "");
+					 emailList.add(tempmail);
 			}
 		}
+		
+		
+		
 		
 		
 		//Check Consistency
@@ -78,6 +90,7 @@ public class StanfordNLPExample {
 		
 		ustId.forEach(System.out::println);
 		emailList.forEach(System.out::println);
+		telefonList.forEach(System.out::println);
 
 		
 		// Finde all Wörter mit mindestens zwei 
@@ -87,7 +100,9 @@ public class StanfordNLPExample {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void getAnnotations(String impressum) {
+	public void getAnnotations(String k, String impressum) {
+		
+		//preprocessing(k, impressum);
 		
 		
 		String rules1 = "rules/stanford/expres.rules.txt";
@@ -119,13 +134,9 @@ public class StanfordNLPExample {
 		    // An Annotation is a Map and you can get and use the various analyses individually.
 		    // The toString() method on an Annotation just prints the text of the Annotation
 		    // But you can see what is in it with other methods like toShorterString()
-		    System.out.println("Pattern Precessing");
-		    
-		   
-		    
 		    
 		    System.out.println("The top level annotation");
-		    System.out.println(annotation.toShorterString());
+		    //System.out.println(annotation.toShorterString());
 		    
 		    
 		    
@@ -135,7 +146,7 @@ public class StanfordNLPExample {
 		    
 		    for (CoreMap sentence : sentences) {
 		    
-		    	System.out.println(sentence);
+		    	//System.out.println(sentence);
 		    	
 			      List<MatchedExpression> matchedExpressions = extractor.extractExpressions(sentence);
 
@@ -147,21 +158,29 @@ public class StanfordNLPExample {
 				        String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
 				        String normalized = token.get(CoreAnnotations.NormalizedNamedEntityTagAnnotation.class);
 				        
-					   System.out.println("token: " + "word="+word + ", pos=" + pos + ", ne=" + ne + ", normalized=" + normalized);
+					   //System.out.println("token: " + "word="+word + ", pos=" + pos + ", ne=" + ne + ", normalized=" + normalized);
 		    	
 		    	  }
 		      for (MatchedExpression matched:matchedExpressions) {
 		        // Print out matched text and value
-				      System.out.println("Matched expression: " + matched.getText() + " with value " + matched.getValue());
-		        // Print out token information
-		        CoreMap cm = matched.getAnnotation();
-		        for (CoreLabel token : cm.get(CoreAnnotations.TokensAnnotation.class)) {
-		          String word = token.get(CoreAnnotations.TextAnnotation.class);
-		          String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
-		          String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
-		          String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
-		          System.out.println("  Matched token: " + "word="+word + ", lemma="+lemma + ", pos=" + pos + ", ne=" + ne);
-		        }
+				if (matched.getText().contains("UNTERNEHMEN")) {
+				
+					  System.out.println("Matched expression: " + matched.getText() + " with value " + matched.getValue());
+				        // Print out token information
+				        CoreMap cm = matched.getAnnotation();
+				        for (CoreLabel token : cm.get(CoreAnnotations.TokensAnnotation.class)) {
+				          String word = token.get(CoreAnnotations.TextAnnotation.class);
+				          String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
+				          String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+				          String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
+				         
+				          
+				          System.out.println("  Matched token: " + "word="+word + ", lemma="+lemma + ", pos=" + pos + ", ne=" + ne);
+				        }
+					
+				}
+		    	  
+		    	
 		      }
 		    }
 		    System.out.flush();
